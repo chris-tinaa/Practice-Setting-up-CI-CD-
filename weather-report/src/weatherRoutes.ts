@@ -1,10 +1,5 @@
 import express from 'express';
-import { 
-  getWeather, 
-  getCityHistory, 
-  getWeatherAnalysis, 
-  adminLogin 
-} from '../controllers/weatherController';
+import { getWeather, getCityHistory, getWeatherAnalysis, adminLogin } from './weatherController';
 
 export const weatherRoutes = express.Router();
 

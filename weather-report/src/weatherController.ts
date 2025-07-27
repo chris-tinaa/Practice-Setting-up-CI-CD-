@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { getWeatherForCity, getHistoricalWeather, processAndAnalyzeWeatherData } from '../services/weatherService';
-import { getDb } from '../config/database';
+import { getHistoricalWeather, getWeatherForCity, processAndAnalyzeWeatherData } from './weatherService';
+import { getDb } from './database';
 
 // Controller with poorly named variables and code smells
 export async function getWeather(req: Request, res: Response): Promise<void> {
