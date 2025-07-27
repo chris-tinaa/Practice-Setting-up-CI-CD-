@@ -1,19 +1,18 @@
-import type {Config} from 'jest';
+import type { Config } from 'jest';
 
 const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
 
-  // --- coverage settings ---------------------------------
-  collectCoverage: true,                       // always write coverage
-  coverageDirectory: 'coverage',               // ⇒ ./coverage/lcov.info
-  coverageReporters: ['lcov', 'text-summary'], // lcov.info + console table
-  // optional: fine‑tune what counts as "code"
+  /* ---------- coverage ------------------------------------------------ */
+  collectCoverage: true,
+  coverageDirectory: 'coverage',           // ⇒ ./coverage/lcov.info
+  coverageReporters: ['lcov', 'text-summary'],
   collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',       // your source
-    '!src/**/*.d.ts',          // ignore type declarations
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',                      // don’t count type declarations
   ],
-  // -------------------------------------------------------
+  /* -------------------------------------------------------------------- */
 
   transform: { '^.+\\.(ts|tsx)$': 'ts-jest' },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],

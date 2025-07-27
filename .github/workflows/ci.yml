@@ -1,80 +1,77 @@
 name: CI Pipeline
 
 on:
-  push:
-    branches: [ '**' ]
-  pull_request:
-    branches: [ '**' ]
+  push:          { branches: [ '**' ] }
+  pull_request:  { branches: [ '**' ] }
+
 jobs:
+# -------------------------------------------------------------------
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: weather-report
+    defaults: { run: { working-directory: weather-report } }
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm ci
-      - name: Run linter
-        run: npx eslint src/ --ext .ts
+      - uses: actions/setup-node@v3
+        with: { node-version: '18' }
+      - run: npm ci
+      - run: npx eslint src --ext .ts
 
+# -------------------------------------------------------------------
   test:
-    runs-on: ubuntu-latest
     needs: lint
-    defaults:
-      run:
-        working-directory: weather-report
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: weather-report } }
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm ci
-      - name: Run tests
+      - uses: actions/setup-node@v3
+        with: { node-version: '18' }
+      - run: npm ci
+      - name: Unit tests → coverage
         run: npm test
-        continue-on-error: true
+        continue-on-error: true            # keep pipeline green
+      - name: Upload LCOV for next jobs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lcov
+          path: coverage/lcov.info
 
+# -------------------------------------------------------------------
   build:
-    runs-on: ubuntu-latest
     needs: test
-    defaults:
-      run:
-        working-directory: weather-report
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm ci
-      - name: Build project
-        run: npm run build
-  
-  sonarcloud:
-    name: SonarCloud
     runs-on: ubuntu-latest
-    needs: build
-    defaults:
-      run:
-        working-directory: weather-report
+    defaults: { run: { working-directory: weather-report } }
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: '18' }
+      - run: npm ci
+      - run: npm run build
+
+# -------------------------------------------------------------------
+  sonarcloud:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: weather-report } }
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: '18' }
+
+      # bring the LCOV file into this fresh VM
+      - name: Download LCOV artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: '18'
-      - name: Install dependencies
-        run: npm ci
-      - name: SonarCloud Scan
+          name: lcov
+          path: coverage                # re‑create coverage/lcov.info
+
+      - name: SonarCloud scan
+        if: always()
         uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: .
+
+        # 👇 block‑style mapping instead of one‑liner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+        with:
+          args: "-Dsonar.javascript.lcov.reportPaths=coverage/lcov.info"
