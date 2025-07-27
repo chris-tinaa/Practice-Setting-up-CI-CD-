@@ -6,17 +6,20 @@ import * as dotenv from 'dotenv';
 import { weatherRoutes } from './weatherRoutes';
 import { initDb } from './database';
 
-// Load env vars (but we'll still hardcode some secrets as a vulnerability)
+
+// Load env vars (tapi tambahkan code smell: variabel tidak terpakai)
 dotenv.config();
+const unusedVariable = 'I am not used anywhere'; // CODE SMELL sengaja
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// PORT dan listen dipindahkan ke server.ts
 
 // Middleware
 app.use(morgan('dev')); // Logging middleware with default config (vulnerability)
 app.use(cors()); // Open CORS policy (vulnerability)
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Initialize database
 initDb();
@@ -35,10 +38,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Start server dipindahkan ke server.ts
 
 // Zombie code - unused function that never gets called
 function checkSystemHealth() {
