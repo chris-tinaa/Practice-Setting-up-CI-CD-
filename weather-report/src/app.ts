@@ -20,6 +20,8 @@ app.use(cors()); // Open CORS policy (vulnerability)
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
+console.log("TESTING")
+
 // Initialize database
 initDb();
 
