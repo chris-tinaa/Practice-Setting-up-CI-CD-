@@ -24,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Initialize database
 initDb();
 
+console.log("TESTING"); 
+
 // Routes
 app.use('/api/weather', weatherRoutes);
 
