@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run linter
-        run: npx eslint source/ --ext .ts
+        run: npx eslint src/ --ext .ts
 
   test:
     runs-on: ubuntu-latest

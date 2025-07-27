@@ -13,13 +13,18 @@
     "allowJs": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "include": [
-    "source/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist"
+  ],
+  "types": [
+    "node"
   ]
 }
