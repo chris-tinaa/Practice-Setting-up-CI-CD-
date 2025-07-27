@@ -2,10 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main, Module-7 ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ main, Module-7 ]
-
+    branches: [ '**' ]
 jobs:
   lint:
     runs-on: ubuntu-latest
