@@ -6,8 +6,10 @@ import * as dotenv from 'dotenv';
 import { weatherRoutes } from './weatherRoutes';
 import { initDb } from './database';
 
-// Load env vars (but we'll still hardcode some secrets as a vulnerability)
+
+// Load env vars (tapi tambahkan code smell: variabel tidak terpakai)
 dotenv.config();
+const unusedVariable = 'I am not used anywhere'; // CODE SMELL sengaja
 
 const app = express();
 const PORT = process.env.PORT || 3000;
